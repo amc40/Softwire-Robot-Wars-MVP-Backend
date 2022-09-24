@@ -6,7 +6,7 @@ import Projectile from "./models/projectile";
 
 const SERVER_PORT = 3001;
 
-interface CreateRobotData {
+export interface CreateRobotData {
     name: string;
     color: string;
     robotCode: string;
