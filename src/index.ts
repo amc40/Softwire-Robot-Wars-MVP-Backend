@@ -64,8 +64,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("startBattle", () => {
-    console.log("battle started");
-    gameRunner = setInterval(() => {
+    console.log("receive startBattle");
+    if(gameRunner == null) {
+        gameRunner = setInterval(() => {
       // create copy so that later robots don't have the advantage of current round's info
       const gameState: GameState = {
         robots: [...robots],
@@ -104,6 +105,7 @@ io.on("connection", (socket) => {
       socket.emit("gameState", gameState);
     }, 50);
     console.log("battle started");
+}
   });
 
   // socket.on("gameState", msg => {

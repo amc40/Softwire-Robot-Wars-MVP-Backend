@@ -57,7 +57,7 @@ export function getRobotAction(
   gameState: GameState
 ): RobotAction {
   const files = fs.readdirSync("./src/robots/code");
-  console.log(`files: ${files}`); // array of file names
+//   console.log(`files: ${files}`); // array of file names
   const robotActionSpecification =
     require(`../robots/code/${robotName}.js`) as RobotActionSpecification;
   return robotActionSpecification(gameState);
