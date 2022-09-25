@@ -20,6 +20,7 @@ export interface CreateRobotData {
 interface ClientToServerEvents {
   uploadRobot: (robot: CreateRobotData) => void;
   startBattle: () => void;
+  resetBots: () => void;
 }
 
 interface ServerToClientEvents {
@@ -76,7 +77,7 @@ io.on("connection", (socket) => {
           gameState
         );
         // TODO: spawn projecile on fire
-        const moveAmount = 10;
+        const moveAmount = 1;
         if (moveDirection === "up") {
           robot.position = [robot.position[0], robot.position[1] + moveAmount];
         } else if (moveDirection === "down") {
@@ -111,6 +112,11 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
+  });
+
+  socket.on("resetBots", () => {
+    console.log("reset bots");
+    robots = readRobotsFromFile();
   });
 
   socket.emit("welcome");
