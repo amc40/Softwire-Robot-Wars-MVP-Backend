@@ -1,16 +1,24 @@
 import * as fs from "fs";
 import { addAbortSignal } from "stream";
+import {
+  RobotAction,
+  RobotActionSpecification,
+} from "../game-logic/robot-action";
 import GameState from "../models/game-state";
-import Robot, { RobotAction, RobotActionSpecification } from "../models/robot";
+import Robot from "../models/robot";
 
 const encoding = "utf8";
 
 function getRobotCodeFilepath(robotName: string) {
-  return `./src/robots/code/${robotName}.js`;
+  return `./robots/code/${robotName}.js`;
 }
 
 function getBaseRobotFilepath() {
-  return "./src/robots";
+  return "./robots";
+}
+
+function getRequireRobotCodeFilepath(robotName: string) {
+  return `../../robots/code/${robotName}.js`;
 }
 
 function getRobotFilepath(robotName: string) {
@@ -56,9 +64,8 @@ export function getRobotAction(
   robotName: string,
   gameState: GameState
 ): RobotAction {
-  const files = fs.readdirSync("./src/robots/code");
-  console.log(`files: ${files}`); // array of file names
-  const robotActionSpecification =
-    require(`../robots/code/${robotName}.js`) as RobotActionSpecification;
+  const robotActionSpecification = require(getRequireRobotCodeFilepath(
+    robotName
+  )) as RobotActionSpecification;
   return robotActionSpecification(gameState);
 }
