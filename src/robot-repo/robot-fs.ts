@@ -1,21 +1,25 @@
 import * as fs from "fs";
-import { addAbortSignal } from "stream";
 import {
   RobotAction,
   RobotActionSpecification,
 } from "../game-logic/robot-action";
 import GameState from "../models/game-state";
-import Robot from "../models/robot";
+import Robot, { createRobot } from "../models/robot";
+import { CreateRobotData } from "../server/server";
 
-const encoding = "utf8";
-
-function getRobotCodeFilepath(robotName: string) {
-  return `./robots/code/${robotName}.js`;
-}
 
 function getBaseRobotFilepath() {
   return "./robots";
 }
+
+function getRobotCodeBaseFilepath() {
+    return `${getBaseRobotFilepath()}/code`
+}
+
+function getRobotCodeFilepath(robotName: string) {
+  return `${getRobotCodeBaseFilepath()}/${robotName}.js`;
+}
+
 
 function getRequireRobotCodeFilepath(robotName: string) {
   return `../../robots/code/${robotName}.js`;
@@ -26,11 +30,7 @@ function getRobotFilepath(robotName: string) {
 }
 
 export function writeRobotToFile(robot: Robot) {
-  fs.writeFile(getRobotFilepath(robot.name), JSON.stringify(robot), (err) => {
-    if (err) {
-      throw `Could not write robot code to file: ${err}`;
-    }
-  });
+  fs.writeFileSync(getRobotFilepath(robot.name), JSON.stringify(robot));
 }
 
 export function readRobotsFromFile(): Robot[] {
@@ -60,6 +60,15 @@ export function writeRobotCodeToFile(robotName: string, robotCode: string) {
   });
 }
 
+function createRobotDirsIfNotExist() {
+    if(!fs.existsSync(getBaseRobotFilepath())){
+        fs.mkdirSync(getBaseRobotFilepath());
+    }
+    if (!fs.existsSync(getRobotCodeBaseFilepath())) {
+        fs.mkdirSync(getRobotCodeBaseFilepath());
+    }
+}
+
 export function getRobotAction(
   robotName: string,
   gameState: GameState
@@ -68,4 +77,28 @@ export function getRobotAction(
     robotName
   )) as RobotActionSpecification;
   return robotActionSpecification(gameState);
+}
+
+export class RobotRepo {
+    robots: Robot[];
+
+    constructor() {
+        createRobotDirsIfNotExist();
+        this.robots = readRobotsFromFile();
+    }
+
+    addRobot(createRobotData: CreateRobotData) {
+        const { name, color, robotCode } = createRobotData;
+        const robot = createRobot(createRobotData);
+        writeRobotToFile(robot);
+        writeRobotCodeToFile(name, robotCode);
+        // TODO: don't refetch them all
+        this.robots = readRobotsFromFile();
+        console.log("new robots", this.robots);
+    }
+
+    getRobots() {
+        return this.robots;
+    }
+
 }

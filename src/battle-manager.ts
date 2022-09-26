@@ -3,8 +3,8 @@ import Battle from "./models/battle";
 import { RobotWarsSocket } from "./server/server";
 
 class BattleManager {
-  readonly GAME_STATE_MSG_INTERVAL_MS = 50;
-  readonly GAME_SIMULATION_INTERVAL_MS = 50;
+  readonly GAME_STATE_MSG_INTERVAL_MS = 32.25;
+  readonly GAME_SIMULATION_INTERVAL_MS = this.GAME_STATE_MSG_INTERVAL_MS;
   battle: Battle;
   subscribedClientSockets: RobotWarsSocket[];
   gameRunner: NodeJS.Timer | null = null;
