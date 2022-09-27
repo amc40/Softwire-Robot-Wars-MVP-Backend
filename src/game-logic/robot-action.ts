@@ -1,6 +1,6 @@
 import GameState from "../models/game-state";
 import Projectile, { PROJECTILE_SPEED } from "../models/projectile";
-import Robot from "../models/robot";
+import { GameRobot } from "../models/robot";
 import { getVector } from "../utils/vector";
 
 export interface RobotAction {
@@ -9,7 +9,7 @@ export interface RobotAction {
   fire: boolean;
 }
 
-function processFire(robot: Robot, fire: boolean): Projectile | undefined {
+function processFire(robot: GameRobot, fire: boolean): Projectile | undefined {
   if (fire) {
     // add a projecile
     return {
@@ -21,7 +21,7 @@ function processFire(robot: Robot, fire: boolean): Projectile | undefined {
 }
 
 function processMoveDirection(
-  robot: Robot,
+  robot: GameRobot,
   moveDirection: RobotAction["moveDirection"]
 ): [number, number] {
   const moveAmount = 10;
@@ -38,7 +38,7 @@ function processMoveDirection(
 }
 
 function rotateTurret(
-  robot: Robot,
+  robot: GameRobot,
   moveTurret: RobotAction["moveTurret"]
 ): number {
   const rotateAmount = Math.PI / 16;
@@ -52,10 +52,10 @@ function rotateTurret(
 }
 
 export function processRobotAction(
-  robot: Robot,
+  robot: GameRobot,
   { moveDirection, moveTurret, fire }: RobotAction
 ): {
-  updatedRobot: Robot;
+  updatedRobot: GameRobot;
   projectile?: Projectile;
 } {
   let projectile = processFire(robot, fire);

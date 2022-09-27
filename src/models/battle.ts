@@ -1,6 +1,6 @@
 import { RobotRepo } from "../robot-repo/robot-fs";
 import GameState from "./game-state";
-import Robot from "./robot";
+import { createRobotGameInstance, Robot } from "./robot";
 
 interface Battle {
   name?: string;
@@ -8,15 +8,16 @@ interface Battle {
   gameState: GameState;
 }
 
-
 export function createBattle(robotRepo: RobotRepo): Battle {
-  const participatingRobots =robotRepo.getRobots()
+  const participatingRobots = robotRepo.getRobots();
   return {
     participatingRobots,
     gameState: {
-      robots: participatingRobots,
+      robots: participatingRobots.map((participatingRobot) =>
+        createRobotGameInstance(participatingRobot)
+      ),
       projectiles: [],
-    }
+    },
   };
 }
 

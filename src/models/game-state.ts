@@ -1,8 +1,8 @@
 import Projectile from "./projectile";
-import Robot from "./robot";
+import { GameRobot } from "./robot";
 
 interface GameState {
-  robots: Robot[];
+  robots: GameRobot[];
   projectiles: Projectile[];
 }
 

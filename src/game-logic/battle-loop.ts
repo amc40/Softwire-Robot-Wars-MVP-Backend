@@ -1,6 +1,6 @@
 import GameState from "../models/game-state";
 import Projectile from "../models/projectile";
-import Robot from "../models/robot";
+import { GameRobot } from "../models/robot";
 import { getRobotAction } from "../robot-repo/robot-fs";
 import { processRobotAction } from "./robot-action";
 
@@ -11,7 +11,7 @@ import { processRobotAction } from "./robot-action";
  */
 export function battleLoop(currentGameState: GameState): GameState {
   // create copy so that later robots don't have the advantage of current round's info
-  let updatedRobots: Robot[] = [];
+  let updatedRobots: GameRobot[] = [];
   let newProjectiles: Projectile[] = [];
   // TODO: do collision detection
   for (let robot of currentGameState.robots) {

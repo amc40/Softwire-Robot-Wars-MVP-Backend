@@ -67,8 +67,7 @@ export function createServer(robotRepo: RobotRepo): RobotWarsServer {
     socket.on("disconnect", () => {
       console.log("user disconnected");
     });
-  
-    socket.emit("welcome");
+
   });
   return io;
 }
