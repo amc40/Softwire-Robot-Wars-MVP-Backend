@@ -1,5 +1,8 @@
 import GameState from "../models/game-state";
-import Projectile from "../models/projectile";
+import Projectile, {
+  PROJECTILE_DAMAGE,
+  updateProjectile,
+} from "../models/projectile";
 import { GameRobot } from "../models/robot";
 import { getRobotAction } from "../robot-repo/robot-fs";
 import { processRobotAction } from "./robot-action";
@@ -21,9 +24,25 @@ export function battleLoop(currentGameState: GameState): GameState {
     if (projectile) newProjectiles.push(projectile);
   }
 
+  let updatedProjectiles: Projectile[] = [];
+  for (let projectile of currentGameState.projectiles) {
+    const updatedProjectileInfo = updateProjectile(projectile, updatedRobots);
+    if (updatedProjectileInfo.state === "in-flight") {
+      updatedProjectiles.push(updatedProjectileInfo.updatedProjectile);
+    } else if (updatedProjectileInfo.state === "hit") {
+      const { robotHit } = updatedProjectileInfo;
+      robotHit.hitPoints = Math.max(0, robotHit.hitPoints - PROJECTILE_DAMAGE);
+      if (robotHit.hitPoints <= 0) {
+        // robot is destroyed, remove it
+        updatedRobots = updatedRobots.filter(
+          (robot) => robot.name !== robotHit.name
+        );
+      }
+    }
+  }
   return {
     ...currentGameState,
     robots: updatedRobots,
-    projectiles: [...currentGameState.projectiles, ...newProjectiles],
+    projectiles: [...updatedProjectiles, ...newProjectiles],
   };
 }

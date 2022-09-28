@@ -1,9 +1,17 @@
+import { doesCircleCollideWithBox } from "../game-logic/collision-detection";
+import { addVectors } from "../utils/vector";
 import { BoundingCircle } from "./bounding-element";
-import { ROBOT_MAX_HITPOINTS } from "./robot";
+import { PhysicsObject } from "./physics-object";
+import { PLAY_AREA_BOUNDS } from "./play-area";
+import {
+  GameRobot,
+  getRobotBoundingBox,
+  Robot,
+  ROBOT_MAX_HITPOINTS,
+} from "./robot";
 
-interface Projectile {
-  position: [number, number];
-  velocity: [number, number];
+interface Projectile extends PhysicsObject {
+  owner: Robot;
 }
 
 export const PROJECTILE_RADIUS = 3;
@@ -17,6 +25,60 @@ export function getProjectileBoundingCircle(
     x: projectile.position[0],
     y: projectile.position[1],
     radius: PROJECTILE_RADIUS,
+  };
+}
+
+type ProjectileState =
+  | {
+      state: "hit";
+      robotHit: GameRobot;
+    }
+  | {
+      state: "left-play-area";
+    }
+  | {
+      state: "in-flight";
+      updatedProjectile: Projectile;
+    };
+
+/**
+ * @return the updated projectile or null if it has
+ */
+export function updateProjectile(
+  originalProjectile: Projectile,
+  gameRobots: GameRobot[]
+): ProjectileState {
+  const position = addVectors(
+    originalProjectile.position,
+    originalProjectile.velocity
+  );
+  const projectile: Projectile = {
+    ...originalProjectile,
+    position,
+  };
+  // check if hit any robot
+  // TODO: check if hit self
+  const projectileBounds = getProjectileBoundingCircle(projectile);
+  const robotHit = gameRobots.find((gameRobot) => {
+    const robotBounds = getRobotBoundingBox(gameRobot);
+    return doesCircleCollideWithBox(projectileBounds, robotBounds);
+  });
+  if (robotHit != null && robotHit.name !== projectile.owner.name) {
+    return {
+      state: "hit",
+      robotHit,
+    };
+  }
+  // check if left play area
+  if (!doesCircleCollideWithBox(projectileBounds, PLAY_AREA_BOUNDS)) {
+    return {
+      state: "left-play-area",
+    };
+  }
+
+  return {
+    state: "in-flight",
+    updatedProjectile: projectile,
   };
 }
 

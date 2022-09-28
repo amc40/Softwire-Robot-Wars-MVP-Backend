@@ -1,5 +1,6 @@
 import { CreateRobotData } from "../server/server";
 import { BoundingBox } from "./bounding-element";
+import { PhysicsObject } from "./physics-object";
 import { getRandomAngle, getRandomPosition } from "./play-area";
 
 export interface Robot {
@@ -15,8 +16,8 @@ export const ROBOT_MAX_HITPOINTS = 100;
 const ROBOT_WIDTH = 25;
 const ROBOT_HEIGHT = 35;
 
-export interface GameRobot extends Robot {
-  position: [number, number];
+export interface GameRobot extends Robot, PhysicsObject {
+  angle: number;
   turretAngle: number;
   hitPoints: number;
 }
@@ -24,7 +25,9 @@ export interface GameRobot extends Robot {
 export function createRobotGameInstance(robot: Robot): GameRobot {
   return {
     ...robot,
+    angle: getRandomAngle(),
     position: getRandomPosition(),
+    velocity: [0, 0],
     turretAngle: getRandomAngle(),
     hitPoints: ROBOT_MAX_HITPOINTS,
   };

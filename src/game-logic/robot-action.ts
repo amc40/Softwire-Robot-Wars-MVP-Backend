@@ -1,11 +1,14 @@
 import GameState from "../models/game-state";
+import { PhysicsObject } from "../models/physics-object";
 import Projectile, { PROJECTILE_SPEED } from "../models/projectile";
 import { GameRobot } from "../models/robot";
-import { getVector } from "../utils/vector";
+import { addVectors, getVector } from "../utils/vector";
 
 export interface RobotAction {
-  moveTurret: "clockwise" | "anticlockwise" | "none";
-  moveDirection: "up" | "right" | "down" | "left" | "none";
+  // TODO: either limit to one of rotateTank or moveTank, or try to simulate turning curved path
+  rotateTurret: "clockwise" | "anticlockwise" | "none";
+  rotateTank: "clockwise" | "anticlockwise" | "none";
+  moveTank: "forwards" | "backwards" | "none";
   fire: boolean;
 }
 
@@ -13,33 +16,65 @@ function processFire(robot: GameRobot, fire: boolean): Projectile | undefined {
   if (fire) {
     // add a projecile
     return {
+      owner: {
+        name: robot.name,
+        color: robot.color,
+      },
       position: [...robot.position],
-      velocity: getVector(robot.turretAngle, PROJECTILE_SPEED),
+      velocity: getVector(robot.turretAngle + robot.angle, PROJECTILE_SPEED),
     };
   }
   return undefined;
 }
 
-function processMoveDirection(
+/**
+ *
+ * @param robot the robot to move
+ * @param moveTank the movement to perform
+ * @returns the Physics object represting the new position and velocity of the tank.
+ */
+function processMoveTank(
   robot: GameRobot,
-  moveDirection: RobotAction["moveDirection"]
-): [number, number] {
-  const moveAmount = 10;
-  if (moveDirection === "up") {
-    return [robot.position[0], robot.position[1] + moveAmount];
-  } else if (moveDirection === "down") {
-    return [robot.position[0], robot.position[1] - moveAmount];
-  } else if (moveDirection === "right") {
-    return [robot.position[0] + moveAmount, robot.position[1]];
-  } else if (moveDirection === "left") {
-    return [robot.position[0] - moveAmount, robot.position[1]];
+  moveTank: RobotAction["moveTank"]
+): PhysicsObject {
+  const speed = 10;
+  let velocity: [number, number] = [0, 0];
+  if (moveTank === "forwards") {
+    velocity = getVector(robot.angle, speed);
+  } else if (moveTank === "backwards") {
+    velocity = getVector(robot.angle + Math.PI, speed);
   }
-  return robot.position;
+  return {
+    position: addVectors(velocity, robot.position),
+    velocity,
+  };
 }
 
-function rotateTurret(
+/**
+ *
+ * @return the new angle of the tank
+ */
+function processRotateTank(
   robot: GameRobot,
-  moveTurret: RobotAction["moveTurret"]
+  rotateRobot: RobotAction["rotateTank"]
+): number {
+  const rotateAmount = Math.PI / 32;
+  // TODO: ensure in range
+  if (rotateRobot === "clockwise") {
+    return robot.angle + rotateAmount;
+  } else if (rotateRobot === "anticlockwise") {
+    return robot.angle - rotateAmount;
+  }
+  return robot.angle;
+}
+
+/**
+ *
+ * @returns the new turret angle
+ */
+function processRotateTurret(
+  robot: GameRobot,
+  moveTurret: RobotAction["rotateTurret"]
 ): number {
   const rotateAmount = Math.PI / 16;
   // TODO: ensure in range
@@ -53,22 +88,27 @@ function rotateTurret(
 
 export function processRobotAction(
   robot: GameRobot,
-  { moveDirection, moveTurret, fire }: RobotAction
+  { rotateTank, moveTank, rotateTurret, fire }: RobotAction
 ): {
   updatedRobot: GameRobot;
   projectile?: Projectile;
 } {
   let projectile = processFire(robot, fire);
 
-  const newRobotPosition = processMoveDirection(robot, moveDirection);
-
-  const newTurretAngle = rotateTurret(robot, moveTurret);
+  // TODO: possibly make this neater
+  const { position, velocity } = processMoveTank(robot, moveTank);
+  // can only do one of move or rotate -- move takes precedence
+  const angle =
+    moveTank !== "none" ? processRotateTank(robot, rotateTank) : robot.angle;
+  const turretAngle = processRotateTurret(robot, rotateTurret);
 
   return {
     updatedRobot: {
       ...robot,
-      position: newRobotPosition,
-      turretAngle: newTurretAngle,
+      position,
+      velocity,
+      angle,
+      turretAngle,
     },
     projectile,
   };
