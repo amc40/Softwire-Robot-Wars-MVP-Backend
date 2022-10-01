@@ -1,4 +1,6 @@
+import { Vector2D } from "../utils/vector";
+
 export interface PhysicsObject {
-  position: [number, number];
-  velocity: [number, number];
+  position: Vector2D;
+  velocity: Vector2D;
 }

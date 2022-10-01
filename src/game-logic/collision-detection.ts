@@ -28,3 +28,7 @@ export function doesCircleCollideWithBox(
   }
   return false;
 }
+
+// function doesLineSegmentCollideWithCircle(
+
+// )

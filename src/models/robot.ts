@@ -27,7 +27,7 @@ export function createRobotGameInstance(robot: Robot): GameRobot {
     ...robot,
     angle: getRandomAngle(),
     position: getRandomPosition(),
-    velocity: [0, 0],
+    velocity: { x: 0, y: 0 },
     turretAngle: getRandomAngle(),
     hitPoints: ROBOT_MAX_HITPOINTS,
   };
@@ -35,8 +35,7 @@ export function createRobotGameInstance(robot: Robot): GameRobot {
 
 export function getRobotBoundingBox(gameRobot: GameRobot): BoundingBox {
   return {
-    x: gameRobot.position[0],
-    y: gameRobot.position[1],
+    ...gameRobot.position,
     width: ROBOT_WIDTH,
     height: ROBOT_HEIGHT,
   };

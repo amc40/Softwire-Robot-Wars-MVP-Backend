@@ -2,7 +2,12 @@ import GameState from "../models/game-state";
 import { PhysicsObject } from "../models/physics-object";
 import Projectile, { PROJECTILE_SPEED } from "../models/projectile";
 import { GameRobot } from "../models/robot";
-import { addVectors, getVector } from "../utils/vector";
+import {
+  addVectors,
+  getVector,
+  getZeroVector,
+  Vector2D,
+} from "../utils/vector";
 
 export interface RobotAction {
   // TODO: either limit to one of rotateTank or moveTank, or try to simulate turning curved path
@@ -20,7 +25,7 @@ function processFire(robot: GameRobot, fire: boolean): Projectile | undefined {
         name: robot.name,
         color: robot.color,
       },
-      position: [...robot.position],
+      position: { ...robot.position },
       velocity: getVector(robot.turretAngle + robot.angle, PROJECTILE_SPEED),
     };
   }
@@ -38,7 +43,7 @@ function processMoveTank(
   moveTank: RobotAction["moveTank"]
 ): PhysicsObject {
   const speed = 10;
-  let velocity: [number, number] = [0, 0];
+  let velocity: Vector2D = getZeroVector();
   if (moveTank === "forwards") {
     velocity = getVector(robot.angle, speed);
   } else if (moveTank === "backwards") {

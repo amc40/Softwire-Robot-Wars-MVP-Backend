@@ -1,13 +1,22 @@
-export function getVector(
-  angleRad: number,
-  magnitude: number
-): [number, number] {
-  return [Math.cos(angleRad) * magnitude, Math.sin(angleRad) * magnitude];
+export interface Vector2D {
+  x: number;
+  y: number;
+}
+
+export function getVector(angleRad: number, magnitude: number): Vector2D {
+  return {
+    x: Math.cos(angleRad) * magnitude,
+    y: Math.sin(angleRad) * magnitude,
+  };
 }
 
 export function addVectors(
-  [x1, y1]: [number, number],
-  [x2, y2]: [number, number]
-): [number, number] {
-  return [x1 + x2, y1 + y2];
+  { x: x1, y: y1 }: Vector2D,
+  { x: x2, y: y2 }: Vector2D
+): Vector2D {
+  return { x: x1 + x2, y: y1 + y2 };
+}
+
+export function getZeroVector() {
+  return { x: 0, y: 0 };
 }
