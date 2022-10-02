@@ -1,5 +1,5 @@
-import Projectile from "./projectile";
-import { GameRobot } from "./robot";
+import { Projectile } from "../internal";
+import { GameRobot } from "../internal";
 
 interface GameState {
   robots: GameRobot[];

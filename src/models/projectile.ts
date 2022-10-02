@@ -1,8 +1,8 @@
-import { doesCircleCollideWithBox } from "../game-logic/collision-detection";
-import { addVectors } from "../utils/vector";
-import { BoundingCircle } from "./bounding-element";
-import { PhysicsObject } from "./physics-object";
-import { PLAY_AREA_BOUNDS } from "./play-area";
+import { doesCircleCollideWithBox } from "../internal";
+import { addVectors } from "../internal";
+import { BoundingCircle } from "../internal";
+import { PhysicsObject } from "../internal";
+import { PLAY_AREA_BOUNDS } from "../internal";
 import {
   GameRobot,
   getRobotBoundingBox,

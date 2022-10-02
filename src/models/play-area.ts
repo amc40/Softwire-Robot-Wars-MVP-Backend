@@ -1,4 +1,4 @@
-import { BoundingBox } from "./bounding-element";
+import { BoundingBox } from "../internal";
 
 export const MAX_POSITION = 1000;
 

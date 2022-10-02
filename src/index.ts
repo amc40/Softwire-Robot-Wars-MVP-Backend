@@ -1,5 +1,5 @@
-import { RobotRepo } from "./robot-repo/robot-fs";
-import { createServer } from "./server/server";
+import { RobotRepo } from "./internal";
+import { createServer } from "./internal";
 
 const robotRepo = new RobotRepo();
 createServer(robotRepo);

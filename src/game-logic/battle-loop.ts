@@ -1,11 +1,11 @@
-import GameState from "../models/game-state";
-import Projectile, {
+import {GameState} from "../internal";
+import {Projectile,
   PROJECTILE_DAMAGE,
-  updateProjectile,
-} from "../models/projectile";
-import { GameRobot } from "../models/robot";
-import { getRobotAction } from "../robot-repo/robot-fs";
-import { processRobotAction } from "./robot-action";
+  updateProjectile} from "../internal";
+
+import { GameRobot } from "../internal";
+import { getRobotAction } from "../internal";
+import { processRobotAction } from "../internal";
 
 /**
  *

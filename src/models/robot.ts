@@ -1,7 +1,7 @@
-import { CreateRobotData } from "../server/server";
-import { BoundingBox } from "./bounding-element";
-import { PhysicsObject } from "./physics-object";
-import { getRandomAngle, getRandomPosition } from "./play-area";
+import { CreateRobotData } from "../internal";
+import { BoundingBox } from "../internal";
+import { PhysicsObject } from "../internal";
+import { getRandomAngle, getRandomPosition } from "../internal";
 
 export interface Robot {
   name: string;

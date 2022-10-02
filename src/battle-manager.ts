@@ -1,6 +1,6 @@
-import { battleLoop } from "./game-logic/battle-loop";
-import Battle from "./models/battle";
-import { RobotWarsSocket } from "./server/server";
+import { battleLoop } from "./internal";
+import { Battle } from "./internal";
+import { RobotWarsSocket } from "./internal";
 
 class BattleManager {
   readonly GAME_STATE_MSG_INTERVAL_MS = 32.25;

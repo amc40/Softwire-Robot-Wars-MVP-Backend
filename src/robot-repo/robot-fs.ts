@@ -2,10 +2,10 @@ import * as fs from "fs";
 import {
   RobotAction,
   RobotActionSpecification,
-} from "../game-logic/robot-action";
-import GameState from "../models/game-state";
-import { createRobot, Robot } from "../models/robot";
-import { CreateRobotData } from "../server/server";
+} from "../internal";
+import { GameState } from "../internal";
+import { createRobot, Robot } from "../internal";
+import { CreateRobotData } from "../internal";
 
 function getBaseRobotFilepath() {
   return "./robots";
@@ -74,6 +74,7 @@ export function getRobotAction(
   const robotActionSpecification = require(getRequireRobotCodeFilepath(
     robotName
   )) as RobotActionSpecification;
+
   return robotActionSpecification(gameState);
 }
 

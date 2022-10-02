@@ -1,4 +1,4 @@
-import { BoundingBox, BoundingCircle } from "../models/bounding-element";
+import { BoundingBox, BoundingCircle } from "../internal";
 
 export function doesCircleCollideWithBox(
   circle: BoundingCircle,

@@ -1,8 +1,8 @@
-import GameState from "../models/game-state";
-import { PhysicsObject } from "../models/physics-object";
-import Projectile, { PROJECTILE_SPEED } from "../models/projectile";
-import { GameRobot } from "../models/robot";
-import { addVectors, getVector } from "../utils/vector";
+import {GameState} from "../internal";
+import { PhysicsObject } from "../internal";
+import {Projectile, PROJECTILE_SPEED} from "../internal";
+import { GameRobot } from "../internal";
+import { addVectors, getVector } from "../internal";
 
 export interface RobotAction {
   // TODO: either limit to one of rotateTank or moveTank, or try to simulate turning curved path
