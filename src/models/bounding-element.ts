@@ -11,7 +11,3 @@ export interface BoundingCircle {
   y: number;
   radius: number;
 }
-
-export interface LineSegment {
-  
-}
