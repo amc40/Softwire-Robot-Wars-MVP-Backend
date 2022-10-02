@@ -1,4 +1,5 @@
 export interface BoundingBox {
+  // centre x and y
   x: number;
   y: number;
   width: number;

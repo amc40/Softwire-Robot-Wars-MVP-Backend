@@ -1,4 +1,6 @@
 import { BoundingBox, BoundingCircle } from "../models/bounding-element";
+import { LineSegment } from "../utils/geometry";
+import { crossProduct, diffVectors, getUnitVector } from "../utils/vector";
 
 export function doesCircleCollideWithBox(
   circle: BoundingCircle,
@@ -28,3 +30,17 @@ export function doesCircleCollideWithBox(
   }
   return false;
 }
+
+// function doesLineSegmentCollideWithCircle(
+//   lineSegment: LineSegment,
+//   circle: BoundingCircle
+// ): boolean {
+//   // from https://stackoverflow.com/a/9053697
+//   const delta = diffVectors(lineSegment.B, lineSegment.A);
+//   const unitDelta = getUnitVector(delta);
+//   const d = crossProduct(diffVectors(circle, lineSegment.A), unitDelta);
+//   if (Math.abs(d) > circle.radius) {
+//     return false;
+//   }
+
+// }

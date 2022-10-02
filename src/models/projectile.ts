@@ -22,8 +22,7 @@ export function getProjectileBoundingCircle(
   projectile: Projectile
 ): BoundingCircle {
   return {
-    x: projectile.position[0],
-    y: projectile.position[1],
+    ...projectile.position,
     radius: PROJECTILE_RADIUS,
   };
 }

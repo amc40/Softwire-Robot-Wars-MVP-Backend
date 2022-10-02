@@ -1,3 +1,4 @@
+import { Vector2D } from "../utils/vector";
 import { BoundingBox } from "./bounding-element";
 
 export const MAX_POSITION = 1000;
@@ -9,11 +10,11 @@ export const PLAY_AREA_BOUNDS: BoundingBox = {
   height: MAX_POSITION
 };
 
-export function getRandomPosition(): [number, number] {
-  return [
-    Math.floor(Math.random() * PLAY_AREA_BOUNDS.width),
-    Math.floor(Math.random() * PLAY_AREA_BOUNDS.height),
-  ];
+export function getRandomPosition(): Vector2D {
+  return {
+    x: Math.floor(Math.random() * PLAY_AREA_BOUNDS.width),
+    y: Math.floor(Math.random() * PLAY_AREA_BOUNDS.height),
+  };
 }
 
 export function getRandomAngle(): number {
