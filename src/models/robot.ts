@@ -15,6 +15,7 @@ export function createRobot(createRobotData: CreateRobotData): Robot {
 export const ROBOT_MAX_HITPOINTS = 100;
 const ROBOT_WIDTH = 25;
 const ROBOT_HEIGHT = 35;
+export const ROBOT_BARREL_LENGTH = 32;
 
 export interface GameRobot extends Robot, PhysicsObject {
   angle: number;

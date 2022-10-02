@@ -1,7 +1,8 @@
 import GameState from "../models/game-state";
 import { PhysicsObject } from "../models/physics-object";
 import Projectile, { PROJECTILE_SPEED } from "../models/projectile";
-import { GameRobot } from "../models/robot";
+import { GameRobot, ROBOT_BARREL_LENGTH } from "../models/robot";
+import { RobotRepo } from "../robot-repo/robot-fs";
 import { addVectors, getVector } from "../utils/vector";
 
 export interface RobotAction {
@@ -12,16 +13,19 @@ export interface RobotAction {
   fire: boolean;
 }
 
-function processFire(robot: GameRobot, fire: boolean): Projectile | undefined {
+function processFire(robot: GameRobot, angle: number, turretAngle: number, position: PhysicsObject["position"], fire: boolean): Projectile | undefined {
   if (fire) {
-    // add a projecile
+    // add a projectile
+    let velocity = getVector(angle+turretAngle, PROJECTILE_SPEED)
+    let projectile_position = [position[0]+Math.cos(angle+turretAngle)*ROBOT_BARREL_LENGTH,
+                    position[1]+Math.sin(angle+turretAngle)*ROBOT_BARREL_LENGTH] as PhysicsObject["position"];
     return {
       owner: {
         name: robot.name,
         color: robot.color,
       },
-      position: [...robot.position],
-      velocity: getVector(robot.turretAngle + robot.angle, PROJECTILE_SPEED),
+      position: projectile_position,
+      velocity: velocity,
     };
   }
   return undefined;
@@ -93,7 +97,6 @@ export function processRobotAction(
   updatedRobot: GameRobot;
   projectile?: Projectile;
 } {
-  let projectile = processFire(robot, fire);
 
   // TODO: possibly make this neater
   const { position, velocity } = processMoveTank(robot, moveTank);
@@ -101,6 +104,7 @@ export function processRobotAction(
   const angle =
     moveTank !== "none" ? processRotateTank(robot, rotateTank) : robot.angle;
   const turretAngle = processRotateTurret(robot, rotateTurret);
+  let projectile = processFire(robot, angle, turretAngle, position, fire);
 
   return {
     updatedRobot: {
