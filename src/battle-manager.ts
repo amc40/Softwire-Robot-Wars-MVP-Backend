@@ -3,7 +3,8 @@ import Battle from "./models/battle";
 import { RobotWarsSocket } from "./server/server";
 
 class BattleManager {
-  readonly GAME_STATE_MSG_INTERVAL_MS = 32.25;
+  static readonly GAME_STATE_MSG_INTERVAL_MS = 32.25;
+  readonly GAME_STATE_MSG_INTERVAL_MS = BattleManager.GAME_STATE_MSG_INTERVAL_MS;
   readonly GAME_SIMULATION_INTERVAL_MS = this.GAME_STATE_MSG_INTERVAL_MS;
   battle: Battle;
   subscribedClientSockets: RobotWarsSocket[];
@@ -28,6 +29,9 @@ class BattleManager {
       this.battle.gameState = newGameState;
       if (newGameState.robots.length < 2) {
         for (let clientSocket of this.subscribedClientSockets) {
+          //update clients with 2 gameStates to show dead player due to interpolating of gameStates
+          clientSocket.emit("gameState", this.battle.gameState);
+          clientSocket.emit("gameState", this.battle.gameState);
           clientSocket.emit("battleEnded", newGameState.robots[0]?.name);
           console.log("battle ended");
           clearInterval(this.gameRunner ?? -1);

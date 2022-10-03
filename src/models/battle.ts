@@ -1,3 +1,4 @@
+import BattleManager from "../battle-manager";
 import { RobotRepo } from "../robot-repo/robot-fs";
 import GameState from "./game-state";
 import { createRobotGameInstance, Robot } from "./robot";
@@ -17,6 +18,7 @@ export function createBattle(robotRepo: RobotRepo): Battle {
         createRobotGameInstance(participatingRobot)
       ),
       projectiles: [],
+      tickRate: BattleManager.GAME_STATE_MSG_INTERVAL_MS as number
     },
   };
 }

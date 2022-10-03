@@ -16,7 +16,7 @@ interface Projectile extends PhysicsObject {
 
 export const PROJECTILE_RADIUS = 3;
 export const PROJECTILE_SPEED = 20;
-export const PROJECTILE_DAMAGE = ROBOT_MAX_HITPOINTS / 20;
+export const PROJECTILE_DAMAGE = ROBOT_MAX_HITPOINTS / 5;
 
 export function getProjectileBoundingCircle(
   projectile: Projectile
