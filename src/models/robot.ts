@@ -1,31 +1,43 @@
-import { CreateRobotData } from "..";
-import { getRobotAction } from "../robot-repo/robot-fs";
-import GameState, { getRandomPosition } from "./game-state";
+import { CreateRobotData } from "../server/server";
+import { BoundingBox } from "./bounding-element";
+import { PhysicsObject } from "./physics-object";
+import { getRandomAngle, getRandomPosition } from "./play-area";
 
-interface Robot {
-    name: string;
-    color: string;
-    position: [number, number];
-    turretAngle: number;
-    hitPoints: number;
+export interface Robot {
+  name: string;
+  color: string;
 }
 
-export function createRobot({ name, color}: CreateRobotData): Robot {
-    return {
-        name,
-        color,
-        position: getRandomPosition(),
-        turretAngle: Math.random() * 2 * Math.PI,
-        hitPoints: 100,
-    };
+export function createRobot(createRobotData: CreateRobotData): Robot {
+  return createRobotData;
 }
 
-export interface RobotAction {
-    moveTurret: "clockwise" | "anticlockwise" | "none";
-    moveDirection: "up" | "right" | "down" | "left" | "none";
-    fire: boolean;
+export const ROBOT_MAX_HITPOINTS = 100;
+const ROBOT_WIDTH = 25;
+const ROBOT_HEIGHT = 35;
+export const ROBOT_BARREL_LENGTH = 32;
+
+export interface GameRobot extends Robot, PhysicsObject {
+  angle: number;
+  turretAngle: number;
+  hitPoints: number;
 }
 
-export type RobotActionSpecification = (gameState: GameState) => RobotAction;
+export function createRobotGameInstance(robot: Robot): GameRobot {
+  return {
+    ...robot,
+    angle: getRandomAngle(),
+    position: getRandomPosition(),
+    velocity: { x: 0, y: 0 },
+    turretAngle: getRandomAngle(),
+    hitPoints: ROBOT_MAX_HITPOINTS,
+  };
+}
 
-export default Robot;
+export function getRobotBoundingBox(gameRobot: GameRobot): BoundingBox {
+  return {
+    ...gameRobot.position,
+    width: ROBOT_WIDTH,
+    height: ROBOT_HEIGHT,
+  };
+}
