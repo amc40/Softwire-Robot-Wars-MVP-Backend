@@ -30,6 +30,8 @@ class BattleManager {
       if (newGameState.robots.length < 2) {
         for (let clientSocket of this.subscribedClientSockets) {
           //update clients with 2 gameStates to show dead player due to interpolating of gameStates
+          //ideally we would send an update where losing player health was 0
+          //or frontend will have to store list of players and infer loser
           clientSocket.emit("gameState", this.battle.gameState);
           clientSocket.emit("gameState", this.battle.gameState);
           clientSocket.emit("battleEnded", newGameState.robots[0]?.name);
