@@ -1,13 +1,15 @@
 import GameState from "../models/game-state";
 import { PhysicsObject } from "../models/physics-object";
 import Projectile, { PROJECTILE_SPEED } from "../models/projectile";
-
-import { GameRobot, ROBOT_BARREL_LENGTH } from "../models/robot";
+import { doesCircleCollideWithBox } from "../game-logic/collision-detection";
+import { GameRobot, ROBOT_BARREL_LENGTH, getRobotBoundingCircle } from "../models/robot";
 import { RobotRepo } from "../robot-repo/robot-fs";
+import { PLAY_AREA_BOUNDS } from "../models/play-area";
 import {
   addVectors,
   getVector,
   getZeroVector,
+  scalarMultiply,
   Vector2D,
 } from "../utils/vector";
 
@@ -22,9 +24,11 @@ export interface RobotAction {
 function processFire(robot: GameRobot, angle: number, turretAngle: number, position: PhysicsObject["position"], fire: boolean): Projectile | undefined {
   if (fire) {
     // add a projectile
-    let velocity = getVector(angle+turretAngle, PROJECTILE_SPEED)
-    let projectile_position = {x: position.x+Math.cos(angle+turretAngle)*ROBOT_BARREL_LENGTH,
-                               y: position.y+Math.sin(angle+turretAngle)*ROBOT_BARREL_LENGTH};
+    let velocity = getVector(angle + turretAngle, PROJECTILE_SPEED)
+    let projectile_position = {
+      x: position.x + Math.cos(angle + turretAngle) * ROBOT_BARREL_LENGTH,
+      y: position.y + Math.sin(angle + turretAngle) * ROBOT_BARREL_LENGTH
+    };
     return {
       owner: {
         name: robot.name,
@@ -54,8 +58,9 @@ function processMoveTank(
   } else if (moveTank === "backwards") {
     velocity = getVector(robot.angle + Math.PI, speed);
   }
+  let futureRobot: GameRobot = {position: addVectors(velocity,robot.position)} as GameRobot;
   return {
-    position: addVectors(velocity, robot.position),
+    position: doesCircleCollideWithBox(getRobotBoundingCircle(futureRobot), PLAY_AREA_BOUNDS) ? addVectors(velocity, robot.position) : robot.position,
     velocity,
   };
 }

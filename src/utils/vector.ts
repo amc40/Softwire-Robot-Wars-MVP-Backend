@@ -17,6 +17,13 @@ export function addVectors(
   return { x: x1 + x2, y: y1 + y2 };
 }
 
+export function scalarMultiply(
+  {x: x1, y: y1}:Vector2D,
+  scalar: number
+): Vector2D {
+  return  {x: x1*scalar, y: y1*scalar};
+}
+
 export function diffVectors(
   { x: x1, y: y1 }: Vector2D,
   { x: x2, y: y2 }: Vector2D

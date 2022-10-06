@@ -1,5 +1,5 @@
 import { CreateRobotData } from "../server/server";
-import { BoundingBox } from "./bounding-element";
+import { BoundingBox, BoundingCircle } from "./bounding-element";
 import { PhysicsObject } from "./physics-object";
 import { getRandomAngle, getRandomPosition } from "./play-area";
 
@@ -15,6 +15,7 @@ export function createRobot(createRobotData: CreateRobotData): Robot {
 export const ROBOT_MAX_HITPOINTS = 100;
 const ROBOT_WIDTH = 25;
 const ROBOT_HEIGHT = 35;
+const ROBOT_RADIUS = 1;
 export const ROBOT_BARREL_LENGTH = 32;
 
 export interface GameRobot extends Robot, PhysicsObject {
@@ -39,5 +40,12 @@ export function getRobotBoundingBox(gameRobot: GameRobot): BoundingBox {
     ...gameRobot.position,
     width: ROBOT_WIDTH,
     height: ROBOT_HEIGHT,
+  };
+}
+
+export function getRobotBoundingCircle(gameRobot: GameRobot): BoundingCircle {
+  return {
+    ...gameRobot.position,
+    radius: ROBOT_RADIUS
   };
 }
