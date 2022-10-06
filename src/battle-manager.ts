@@ -1,5 +1,6 @@
 import { battleLoop } from "./game-logic/battle-loop";
 import Battle from "./models/battle";
+import { Robot } from "./models/robot";
 import { RobotWarsSocket } from "./server/server";
 
 class BattleManager {
@@ -52,6 +53,11 @@ class BattleManager {
   handleDisconnect(clientSocketToUnsubscribe: RobotWarsSocket) {
     this.handleUnsubscribe(clientSocketToUnsubscribe);
   }
+
+  getParticipatingRobots(): Robot[] {
+    return [...this.battle.participatingRobots];
+  }
+
 }
 
 export default BattleManager;

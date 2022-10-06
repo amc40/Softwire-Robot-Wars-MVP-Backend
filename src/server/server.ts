@@ -2,7 +2,7 @@ import { Server, Socket } from "socket.io";
 import BattleManager from "../battle-manager";
 import Battle, { createBattle } from "../models/battle";
 import GameState from "../models/game-state";
-import { createRobot } from "../models/robot";
+import { createRobot, Robot } from "../models/robot";
 import { readRobotsFromFile, RobotRepo, writeRobotCodeToFile, writeRobotToFile } from "../robot-repo/robot-fs";
 
 const SERVER_PORT = 3001;
@@ -22,6 +22,10 @@ interface ServerToClientEvents {
   battleEnded: (winnerName?: string) => void;
   gameState: (gameState: GameState) => void;
   welcome: () => void;
+  battleInfo: (battleInfo: {
+    name?: string,
+    participatingRobots: Robot[],
+  }) => void;
 }
 
 interface InterServerEvents {}
@@ -61,6 +65,9 @@ export function createServer(robotRepo: RobotRepo): RobotWarsServer {
       const battle: Battle = createBattle(robotRepo);  
       const battleManager = new BattleManager(battle, [socket]);
       battleManager.startBattle();
+      socket.emit("battleInfo", {
+        participatingRobots: battleManager.getParticipatingRobots(),
+      });
     });
   
   
