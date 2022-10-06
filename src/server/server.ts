@@ -13,19 +13,26 @@ export interface CreateRobotData {
   robotCode: string;
 }
 
+interface BattleInfo {
+  name?: string;
+  participatingRobots: Robot[];
+}
+
 interface ClientToServerEvents {
   uploadRobot: (robot: CreateRobotData) => void;
   startBattle: () => void;
+  subscribeToBattle: (battleId: string) => void;
+  getAllRobots: () => void;
+  getCurrentBattles: () => void;
 }
 
 interface ServerToClientEvents {
   battleEnded: (winnerName?: string) => void;
   gameState: (gameState: GameState) => void;
   welcome: () => void;
-  battleInfo: (battleInfo: {
-    name?: string,
-    participatingRobots: Robot[],
-  }) => void;
+  battleInfo: (battleInfo: BattleInfo) => void;
+  allRobots: Robot[],
+  currentBattles: BattleInfo[];
 }
 
 interface InterServerEvents {}
