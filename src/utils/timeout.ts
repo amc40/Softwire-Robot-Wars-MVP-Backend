@@ -4,12 +4,10 @@ export async function callWithTimeout<Args extends any[], ReturnType>(
   args: Args
 ): Promise<ReturnType> {
   const callF = async () => f(...args);
-  const timeoutF = setTimeout(() => {
-    return "timed-out";
-  }, timeout);
-  const result = await Promise.race([callF(), timeoutF]);
-  if (result !== "timed-out") {
-    throw new Error(`timed out when calling ${f.toString()}`);
-  }
-  return result;
+  const timeoutF = new Promise<never>((_, reject) => {
+    setTimeout(() => {
+      reject("timed out");
+    }, timeout);
+  });
+  return await Promise.race([callF(), timeoutF]);
 }

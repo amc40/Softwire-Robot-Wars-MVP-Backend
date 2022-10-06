@@ -25,7 +25,7 @@ export async function battleLoop(
       const robotAction = getRobotAction(robot.name, currentGameState);
       const { updatedRobot, projectile } = await callWithTimeout(
         processRobotAction,
-        500,
+        5000,
         [robot, robotAction]
       );
       updatedRobots.push(updatedRobot);
