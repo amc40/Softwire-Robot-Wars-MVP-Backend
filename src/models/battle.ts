@@ -20,6 +20,7 @@ export function createBattle(robotRepo: RobotRepo): Battle {
         createRobotGameInstance(participatingRobot)
       ),
       projectiles: [],
+      gameEvents: [],
       tickRate: BattleManager.GAME_STATE_MSG_INTERVAL_MS as number
     },
   };
