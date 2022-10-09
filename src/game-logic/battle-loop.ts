@@ -6,6 +6,7 @@ import Projectile, {
 import { GameRobot } from "../models/robot";
 import { getRobotAction } from "../robot-repo/robot-fs";
 import { processRobotAction } from "./robot-action";
+import { GameEvent, PlayerHitEvent } from "../models/game-event";
 
 /**
  *
@@ -16,6 +17,7 @@ export function battleLoop(currentGameState: GameState): GameState {
   // create copy so that later robots don't have the advantage of current round's info
   let updatedRobots: GameRobot[] = [];
   let newProjectiles: Projectile[] = [];
+  let gameEvents: GameEvent[] = [];
   // TODO: do collision detection
   for (let robot of currentGameState.robots) {
     const robotAction = getRobotAction(robot.name, currentGameState);
@@ -32,6 +34,7 @@ export function battleLoop(currentGameState: GameState): GameState {
     } else if (updatedProjectileInfo.state === "hit") {
       const { robotHit } = updatedProjectileInfo;
       robotHit.hitPoints = Math.max(0, robotHit.hitPoints - PROJECTILE_DAMAGE);
+      gameEvents.push(new PlayerHitEvent(robotHit.position));
       if (robotHit.hitPoints <= 0) {
         // robot is destroyed, remove it
         updatedRobots = updatedRobots.filter(
@@ -44,5 +47,6 @@ export function battleLoop(currentGameState: GameState): GameState {
     ...currentGameState,
     robots: updatedRobots,
     projectiles: [...updatedProjectiles, ...newProjectiles],
+    gameEvents: gameEvents
   };
 }
