@@ -71,9 +71,13 @@ export function getRobotAction(
   robotName: string,
   gameState: GameState
 ): RobotAction {
-  const robotActionSpecification = require(getRequireRobotCodeFilepath(
+  const _robotActionSpecification = require(getRequireRobotCodeFilepath(
     robotName
-  )) as RobotActionSpecification;
+  ));
+  if (typeof _robotActionSpecification !== "function") {
+    throw new Error("robot action was not a function");
+  }
+  const robotActionSpecification = _robotActionSpecification as RobotActionSpecification;
   return robotActionSpecification(gameState);
 }
 

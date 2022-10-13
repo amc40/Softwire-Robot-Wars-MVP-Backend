@@ -5,7 +5,8 @@ import { RobotWarsSocket } from "./server/server";
 
 class BattleManager {
   static readonly GAME_STATE_MSG_INTERVAL_MS = 32.25;
-  readonly GAME_STATE_MSG_INTERVAL_MS = BattleManager.GAME_STATE_MSG_INTERVAL_MS;
+  readonly GAME_STATE_MSG_INTERVAL_MS =
+    BattleManager.GAME_STATE_MSG_INTERVAL_MS;
   readonly GAME_SIMULATION_INTERVAL_MS = this.GAME_STATE_MSG_INTERVAL_MS;
   battle: Battle;
   subscribedClientSockets: RobotWarsSocket[];
@@ -25,8 +26,8 @@ class BattleManager {
       }
     }, this.GAME_STATE_MSG_INTERVAL_MS);
 
-    this.gameRunner = setInterval(() => {
-      const newGameState = battleLoop(this.battle.gameState);
+    this.gameRunner = setInterval(async () => {
+      const newGameState = await battleLoop(this.battle.gameState);
       this.battle.gameState = newGameState;
       if (newGameState.robots.length < 2) {
         for (let clientSocket of this.subscribedClientSockets) {
@@ -57,7 +58,6 @@ class BattleManager {
   getParticipatingRobots(): Robot[] {
     return [...this.battle.participatingRobots];
   }
-
 }
 
 export default BattleManager;
